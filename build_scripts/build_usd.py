@@ -1123,7 +1123,7 @@ subgroup.add_argument("--no-tests", dest="build_tests", action="store_false",
                       help="Do not build unit tests (default)")
 subgroup = group.add_mutually_exclusive_group()
 subgroup.add_argument("--docs", dest="build_docs", action="store_true",
-                      default=False, help="Build documentation")
+                      default=True, help="Build documentation")
 subgroup.add_argument("--no-docs", dest="build_docs", action="store_false",
                       help="Do not build documentation (default)")
 subgroup = group.add_mutually_exclusive_group()
@@ -1180,13 +1180,13 @@ subgroup.add_argument("--no-openimageio", dest="build_oiio", action="store_false
 group = parser.add_argument_group(title="Alembic Plugin Options")
 subgroup = group.add_mutually_exclusive_group()
 subgroup.add_argument("--alembic", dest="build_alembic", action="store_true", 
-                      default=False,
+                      default=True,
                       help="Build Alembic plugin for USD")
 subgroup.add_argument("--no-alembic", dest="build_alembic", action="store_false",
                       help="Do not build Alembic plugin for USD (default)")
 subgroup = group.add_mutually_exclusive_group()
 subgroup.add_argument("--hdf5", dest="enable_hdf5", action="store_true", 
-                      default=False,
+                      default=True,
                       help="Enable HDF5 support in the Alembic plugin")
 subgroup.add_argument("--no-hdf5", dest="enable_hdf5", action="store_false",
                       help="Disable HDF5 support in the Alembic plugin (default)")
@@ -1202,11 +1202,11 @@ subgroup.add_argument("--no-materialx", dest="build_materialx", action="store_fa
 group = parser.add_argument_group(title="Maya Plugin Options")
 subgroup = group.add_mutually_exclusive_group()
 subgroup.add_argument("--maya", dest="build_maya", action="store_true", 
-                      default=False,
+                      default=True,
                       help="Build Maya plugin for USD")
 subgroup.add_argument("--no-maya", dest="build_maya", action="store_false",
                       help="Do not build Maya plugin for USD (default)")
-group.add_argument("--maya-location", type=str,
+group.add_argument("--maya-location", type=str,default="/tools/package/maya/2016.5x2sp2",
                    help="Directory where Maya is installed.")
 
 group = parser.add_argument_group(title="Katana Plugin Options")
@@ -1222,11 +1222,11 @@ group.add_argument("--katana-api-location", type=str,
 group = parser.add_argument_group(title="Houdini Plugin Options")
 subgroup = group.add_mutually_exclusive_group()
 subgroup.add_argument("--houdini", dest="build_houdini", action="store_true", 
-                      default=False,
+                      default=True,
                       help="Build Houdini plugin for USD")
 subgroup.add_argument("--no-houdini", dest="build_houdini", action="store_false",
                       help="Do not build Houdini plugin for USD (default)")
-group.add_argument("--houdini-location", type=str,
+group.add_argument("--houdini-location", type=str,default="/tools/package/houdini/16.5.473",
                    help="Directory where Houdini is installed.")
 
 args = parser.parse_args()
