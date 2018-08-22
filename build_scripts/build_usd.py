@@ -223,6 +223,10 @@ def RunCMake(context, force, extraArgs = None):
             '-DCMAKE_PREFIX_PATH="{depsInstDir}" '
             '-DCMAKE_C_COMPILER="/tools/package/gcc/4.8.3/bin/gcc" '
             '-DCMAKE_CXX_COMPILER="/tools/package/gcc/4.8.3/bin/g++" '
+            '-DBOOST_ROOT:PATHNAME="/tools/package/boost/1.55.0" '
+            '-DBoost_LIBRARY_DIRS:FILEPATH="/tools/package/boost/1.55.0/lib" '
+            '-DBoost_NO_BOOST_CMAKE=TRUE '
+            '-DBoost_NO_SYSTEM_PATHS=TRUE '
             '{osx_rpath} '
             '{generator} '
             '{extraArgs} '
@@ -529,7 +533,7 @@ def InstallBoost(context, force, buildArgs):
         Run('{b2} {options} install'
             .format(b2=b2, options=" ".join(b2_settings)))
 
-BOOST = Dependency("boost", InstallBoost, BOOST_VERSION_FILE)
+#BOOST = Dependency("boost", InstallBoost, BOOST_VERSION_FILE)
 
 ############################################################
 # Intel TBB
@@ -1174,7 +1178,7 @@ group.add_argument("--embree-location", type=str,
                    help="Directory where Embree is installed.")
 subgroup = group.add_mutually_exclusive_group()
 subgroup.add_argument("--openimageio", dest="build_oiio", action="store_true", 
-                      default=False,
+                      default=True,
                       help="Build OpenImageIO plugin for USD")
 subgroup.add_argument("--no-openimageio", dest="build_oiio", action="store_false",
                       help="Do not build OpenImageIO plugin for USD (default)")
@@ -1379,7 +1383,8 @@ if extraPythonPaths:
 
 # Determine list of dependencies that are required based on options
 # user has selected.
-requiredDependencies = [ZLIB, BOOST, TBB]
+#requiredDependencies = [ZLIB, BOOST, TBB]
+requiredDependencies = [ZLIB, TBB]
 
 if context.buildAlembic:
     if context.enableHDF5:

@@ -20,9 +20,29 @@ endif()
 # set our internal python libraries and includes
 set(PYTHON_LIBRARY "/dd/tools/cent6_64/package/python/2.7.13_shared/lib/libpython2.7.so")
 
+#set(BOOST_ROOT "/tools/package/boost/1.55.0")
+#set(BOOST_INCLUDEDIR "/tools/package/boost/1.55.0/include")
+#set(BOOST_LIBRARYDIR "/tools/package/boost/1.55.0/lib")
+
 #set(PYTHON_INCLUDE_DIRS "/dd/tools/cent6_64/package/python/2.7.13_shared/include/python2.7")
 
 include_directories("/dd/tools/cent6_64/package/python/2.7.13_shared/include/python2.7")
+include_directories("/dd/tools/cent6_64/package/boost/1.55.0/include")
+
+#link_directories("/tools/package/boost/1.55.0/lib")
+
+#find_package(Boost
+#        COMPONENTS
+#            filesystem
+#            program_options
+#            python
+#            system
+#        REQUIRED
+#    )
+#
+#if(Boost_FOUND)
+#  message(STATUS "${Boost_VERSION}=${${Boost_VERSION}}")
+#endif()
 
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/defaults
                       ${CMAKE_SOURCE_DIR}/cmake/modules
