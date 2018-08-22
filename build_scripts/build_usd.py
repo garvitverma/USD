@@ -221,6 +221,8 @@ def RunCMake(context, force, extraArgs = None):
         Run('cmake '
             '-DCMAKE_INSTALL_PREFIX="{instDir}" '
             '-DCMAKE_PREFIX_PATH="{depsInstDir}" '
+            '-DCMAKE_C_COMPILER="/tools/package/gcc/4.8.3/bin/gcc" '
+            '-DCMAKE_CXX_COMPILER="/tools/package/gcc/4.8.3/bin/g++" '
             '{osx_rpath} '
             '{generator} '
             '{extraArgs} '
@@ -519,7 +521,7 @@ def InstallBoost(context, force, buildArgs):
             # Must specify toolset=clang to ensure install_name for boost
             # libraries includes @rpath
             b2_settings.append("toolset=clang")
-
+            
         # Add on any user-specified extra arguments.
         b2_settings += buildArgs
 
@@ -1123,7 +1125,7 @@ subgroup.add_argument("--no-tests", dest="build_tests", action="store_false",
                       help="Do not build unit tests (default)")
 subgroup = group.add_mutually_exclusive_group()
 subgroup.add_argument("--docs", dest="build_docs", action="store_true",
-                      default=True, help="Build documentation")
+                      default=False, help="Build documentation")
 subgroup.add_argument("--no-docs", dest="build_docs", action="store_false",
                       help="Do not build documentation (default)")
 subgroup = group.add_mutually_exclusive_group()

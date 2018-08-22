@@ -17,6 +17,13 @@ if (NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
     endif()
 endif()
 
+# set our internal python libraries and includes
+set(PYTHON_LIBRARY "/dd/tools/cent6_64/package/python/2.7.13_shared/lib/libpython2.7.so")
+
+#set(PYTHON_INCLUDE_DIRS "/dd/tools/cent6_64/package/python/2.7.13_shared/include/python2.7")
+
+include_directories("/dd/tools/cent6_64/package/python/2.7.13_shared/include/python2.7")
+
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/defaults
                       ${CMAKE_SOURCE_DIR}/cmake/modules
                       ${CMAKE_SOURCE_DIR}/cmake/macros)
@@ -28,16 +35,6 @@ include(Options)
 if((NOT BUILD_SHARED_LIBS OR PXR_BUILD_MONOLITHIC) AND NOT WIN32)
     cmake_minimum_required(VERSION 3.1.0)
 endif()
-
-# set our internal python libraries and includes
-set(PYTHON_LIBRARY "/dd/tools/cent6_64/package/python/2.7.13_shared/lib/libpython2.7.so")
-
-#set(PYTHON_INCLUDE_DIRS "/dd/tools/cent6_64/package/python/2.7.13_shared/include/python2.7")
-
-include_directories("/dd/tools/cent6_64/package/python/2.7.13_shared/include/python2.7")
-
-#find_package(PythonInterp 2.7 REQUIRED)
-#find_package(PythonLibs 2.7 REQUIRED)
 
 include(ProjectDefaults)
 include(Packages)
