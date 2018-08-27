@@ -216,23 +216,59 @@ def RunCMake(context, force, extraArgs = None):
     osx_rpath = None
     if MacOS():
         osx_rpath = "-DCMAKE_MACOSX_RPATH=ON"
-
+        
+    # manual override   
+    #    '-DBOOST_ROOT:PATHNAME="/tools/package/boost/1.55.0" '
+    #            '-DBoost_LIBRARY_DIRS:FILEPATH="/tools/package/boost/1.55.0/lib" '
+    #            '-DGLEW_LOCATION="/tools/package/glew/2.0.0" '
+    #            '-DOIIO_LOCATION="/tools/package/openimageio/1.7.15_dd03" '
+    #            '-DTBB_ROOT_DIR="/tools/package/tbb/4.4.6" '
+    #            '-DTBB_VERSION="4.4" '
+    #            '-DTBB_INTERFACE_VERSION="9006" '
+    #            '-DOPENEXR_HOME="/tools/package/openexr/2.2.0" '
+    #            '-DILMBASE_HOME="/tools/package/ilmbase/2.2.0" '
+    #            '-DALEMBIC_DIR="/tools/package/alembic/1.7.7_gcc4.8.5" '
+    #            '-DOPENSUBDIV_ROOT_DIR="/tools/package/opensubdiv/3.1.1" '
+    #            '-DBoost_NO_BOOST_CMAKE=TRUE '
+    #            '-DBoost_NO_SYSTEM_PATHS=TRUE '
+    #            '-DHDF5_INCLUDE_DIRS="/tools/package/hdf5/1.10.0-patch1/include" '
+    #            '-DHDF5_LIBRARIES="/tools/package/hdf5/1.10.0-patch1/lib" '
+    #            '-DOPENEXR_HOME="/tools/package/openexr/2.2.0" '
+    #            '-DILMBASE_HOME="/tools/package/ilmbase/2.2.0" '
+        
+    # we want to use our own set of dependencies        
+    DDdepsInstDirs = ["/tools/package/boost/1.55.0", "/tools/package/hdf5/1.10.0-patch1" , "/tools/package/glew/2.0.0",
+                    "/tools/package/openimageio/1.7.14_nobin", "/tools/package/tbb/4.4.6",
+                    "/tools/package/openexr/2.2.0", "/tools/package/ilmbase/2.2.0", 
+                    "/tools/package/alembic/1.7.7_gcc4.8.5", "/tools/package/opensubdiv/3.1.1",
+                    "/tools/package/libjpeg/9b", "/tools/package/libpng/1.6.29", "/tools/package/tiff/4.0.6"]
+                    
+    # only for building libraw and ffmpeg support in oiio
+#    DDdepsInstDirs.append("/tools/package/ffmpeg/3.4.1_no360")
+#    install_dir = "/dd/shows/DEVSGTK/user/work.gverma/git/deps/openimageio/1.7.14_noraw"
+    
+    install_dir = "/dd/shows/DEVSGTK/user/work.gverma/git/USD_build_hdf5"
+    
+    print "OVERRIDING CMAKE_PREFIX_PATH with DD dependencies!:", ";".join(DDdepsInstDirs) 
+    print "OVERRIDING CMAKE_INSTALL_PREFIX to: ", install_dir
+                
     with CurrentWorkingDirectory(buildDir):
         Run('cmake '
             '-DCMAKE_INSTALL_PREFIX="{instDir}" '
             '-DCMAKE_PREFIX_PATH="{depsInstDir}" '
-            '-DCMAKE_C_COMPILER="/tools/package/gcc/4.8.3/bin/gcc" '
-            '-DCMAKE_CXX_COMPILER="/tools/package/gcc/4.8.3/bin/g++" '
+            '-DCMAKE_C_COMPILER="/tools/package/gcc/4.8.5/bin/gcc" '
+            '-DCMAKE_CXX_COMPILER="/tools/package/gcc/4.8.5/bin/g++" '
             '-DBOOST_ROOT:PATHNAME="/tools/package/boost/1.55.0" '
             '-DBoost_LIBRARY_DIRS:FILEPATH="/tools/package/boost/1.55.0/lib" '
             '-DBoost_NO_BOOST_CMAKE=TRUE '
             '-DBoost_NO_SYSTEM_PATHS=TRUE '
+            '-DHDF5_ROOT="/tools/package/hdf5/1.10.0-patch1" '
             '{osx_rpath} '
             '{generator} '
             '{extraArgs} '
             '"{srcDir}"'
-            .format(instDir=instDir,
-                    depsInstDir=context.instDir,
+            .format(instDir=install_dir,
+                    depsInstDir=";".join(DDdepsInstDirs),
                     srcDir=srcDir,
                     osx_rpath=(osx_rpath or ""),
                     generator=(generator or ""),
@@ -742,9 +778,13 @@ OIIO_URL = "https://github.com/OpenImageIO/oiio/archive/Release-1.7.14.zip"
 
 def InstallOpenImageIO(context, force, buildArgs):
     with CurrentWorkingDirectory(DownloadURL(OIIO_URL, context, force)):
+#        extraArgs = ['-DOIIO_BUILD_TOOLS=OFF',
+#                     '-DOIIO_BUILD_TESTS=OFF',
+#                     '-DUSE_PYTHON=OFF',
+#                     '-DSTOP_ON_WARNING=OFF']
+
         extraArgs = ['-DOIIO_BUILD_TOOLS=OFF',
                      '-DOIIO_BUILD_TESTS=OFF',
-                     '-DUSE_PYTHON=OFF',
                      '-DSTOP_ON_WARNING=OFF']
 
         # OIIO's FindOpenEXR module circumvents CMake's normal library 
@@ -754,7 +794,12 @@ def InstallOpenImageIO(context, force, buildArgs):
         # normally be picked up when we specify CMAKE_PREFIX_PATH. 
         # This may lead to undefined symbol errors at build or runtime. 
         # So, we explicitly specify the OpenEXR we want to use here.
-        extraArgs.append('-DOPENEXR_HOME="{instDir}"'
+        # give it our openexr home
+        extraArgs.append('-DOPENEXR_HOME="/tools/package/openexr/2.2.0"'
+                         .format(instDir=context.instDir))
+                         
+        # OCIO support
+        extraArgs.append('-DOCIO_PATH="/tools/package/opencolorio/1.0.9_py27"'
                          .format(instDir=context.instDir))
 
         # If Ptex support is disabled in USD, disable support in OpenImageIO
@@ -982,8 +1027,9 @@ def InstallUSD(context, force, buildArgs):
 
                 # CMAKE_PREFIX_PATH isn't sufficient for the FindHDF5 module 
                 # to find the HDF5 we've built, so provide an extra hint.
-                extraArgs.append('-DHDF5_ROOT="{instDir}"'
-                                 .format(instDir=context.instDir))
+                # we are overriding HDF5 root
+#                extraArgs.append('-DHDF5_ROOT="{instDir}"'
+#                                 .format(instDir=context.instDir))
             else:
                 extraArgs.append('-DPXR_ENABLE_HDF5_SUPPORT=OFF')
         else:

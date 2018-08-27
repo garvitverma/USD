@@ -19,6 +19,23 @@ endif()
 
 # set our internal python libraries and includes
 set(PYTHON_LIBRARY "/dd/tools/cent6_64/package/python/2.7.13_shared/lib/libpython2.7.so")
+# our tbb libs
+#set(TBB_LIBRARY "/tools/package/tbb/4.4.6/lib")
+# our glew libs
+#set(GLEW_LIBRARY "/tools/package/glew/2.0.0/lib64")
+# our oiio libs
+#set(OIIO_LIBRARY_DIR "/tools/package/openimageio/1.7.15_dd03/lib")
+#set(OIIO_BASE_DIR "/tools/package/openimageio/1.7.15_dd03")
+# our openexr and ilmbase
+#set(OPENEXR_HOME "/tools/package/openexr/2.2.0")
+#set(ILMBASE_HOME "/tools/package/ilmbase/2.2.0")
+# our opensubdiv
+#set(OPENSUBDIV_ROOT_DIR "/tools/package/opensubdiv/3.1.1")
+
+# generic link directories jpeg, png, tiff libs
+#link_directories("/tools/package/libjpeg/9b/lib")
+#link_directories("/tools/package/libpng/1.6.29/lib64")
+#link_directories("/tools/package/tiff/4.0.6/lib")
 
 #set(BOOST_ROOT "/tools/package/boost/1.55.0")
 #set(BOOST_INCLUDEDIR "/tools/package/boost/1.55.0/include")
@@ -27,7 +44,25 @@ set(PYTHON_LIBRARY "/dd/tools/cent6_64/package/python/2.7.13_shared/lib/libpytho
 #set(PYTHON_INCLUDE_DIRS "/dd/tools/cent6_64/package/python/2.7.13_shared/include/python2.7")
 
 include_directories("/dd/tools/cent6_64/package/python/2.7.13_shared/include/python2.7")
-include_directories("/dd/tools/cent6_64/package/boost/1.55.0/include")
+#include_directories("/tools/package/hdf5/1.10.0-patch1/include")
+
+# include our tbb
+#include_directories("/tools/package/tbb/4.4.6/include")
+# include our boost
+#include_directories("/dd/tools/cent6_64/package/boost/1.55.0/include")
+# include our glew
+#include_directories("/tools/package/glew/2.0.0/include")
+# include our oiio
+#include_directories("/tools/package/openimageio/1.7.15_dd03/include")
+# include our openexr and ilmbase
+#include_directories("/tools/package/openexr/2.2.0/include")
+#include_directories("/tools/package/ilmbase/2.2.0/include")
+# include our opensubdiv
+#include_directories("/tools/package/opensubdiv/3.1.1/include")
+# include generic jpeg, png, tiff
+#include_directories("/tools/package/libjpeg/9b/include")
+#include_directories("/tools/package/libpng/1.6.29/include")
+#include_directories("/tools/package/tiff/4.0.6/include")
 
 #link_directories("/tools/package/boost/1.55.0/lib")
 
